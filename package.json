@@ -1,14 +1,17 @@
 {
   "name": "backends",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "src/index.js",
   "type": "module",
   "scripts": {
-    "dev": " nodemon src/index"
+    "dev": "nodemon -r dotenv/config --experimental-json-modules src/index.js"
   },
   "keywords": [
     "javascript",
-    "backend"
+    "backend",
+    "express",
+    "mongoose",
+    "api"
   ],
   "author": "",
   "license": "ISC",
@@ -16,5 +19,20 @@
   "devDependencies": {
     "nodemon": "^3.1.10",
     "prettier": "^3.6.2"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cloudinary": "^2.7.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.2",
+    "express": "^5.1.0",
+    "express-fileupload": "^1.5.2",
+    "index.js": "^0.0.3",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.18.1",
+    "mongoose-aggregate-paginate-v2": "^1.1.4",
+    "multer": "^2.0.2",
+    "npx": "^10.2.2"
   }
 }
