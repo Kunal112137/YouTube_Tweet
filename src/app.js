@@ -1,68 +1,44 @@
 import express from "express";
-import cookieParser from "cookie-parser";
 import cors from "cors";
+import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
+dotenv.config();
+const app = express();
 
-import userRouter from "./routes/users.js";
-import videoRouter from "./routes/video.routes.js";
-import playlistRouter from "./routes/playlist.routes.js";
-import likeRouter from "./routes/like.routes.js";
-import tweetRouter from "./routes/tweet.routes.js";
+const corsOptions = {
+  // const corsOptions = { origin: '*' } // for development only
+  origin: process.env.CORS_ORIGIN || "*",
+  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+  Credential: true,
+};
+
+app.use(cors(corsOptions));
+app.use(express.json({ limit: "15kb" }));
+app.use(express.urlencoded({ extended: false,limit: "10kb" }));
+app.use(cookieParser());
+app.use(express.static('public'));
+
+//routes for user management
+import userRoutes from "./routes/user.routes.js";
+import videoRoutes from "./routes/video.routes.js";
+import playlistRoutes from "./routes/playlist.routes.js";
+import likeRoutes from "./routes/like.routes.js";
+import commentRoutes from "./routes/comment.routes.js";
+import subscriptionRoutes from "./routes/subscription.routes.js";
+import tweetRoutes from "./routes/tweet.routes.js";
 import dashboardRouter from "./routes/dashboard.routes.js";
 import healthcheckRouter from "./routes/healthcheck.routes.js";
 
-const app = express();
-app.use(express.json());
-
-
-// ✅ Middlewares
-app.use(cors({
-  origin: process.env.CORS_ORIGIN,
-  credentials: true,
-}));
-app.use(express.json({ limit: "10mb" }));
-app.use(express.urlencoded({ extended: true, limit: "16kb" }));
-app.use(express.static("public"));
-app.use(cookieParser());
-
-// ✅ Routes
-app.use("/api/v1/users", userRouter);
-app.use("/api/v1/videos", videoRouter);
-app.use("/api/v1/playlists", playlistRouter);
-app.use("/api/v1/likes", likeRouter);
-app.use("/api/v1/tweets", tweetRouter);
-app.use("/api/v1/dashboard", dashboardRouter);
+//middleware to handle user routes
+// app.use("/api/v1/userss", usersRoutes);
+app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/videos", videoRoutes);
+app.use("/api/v1/playlists", playlistRoutes);
+app.use("/api/v1/likes", likeRoutes);
+app.use("/api/v1/comments", commentRoutes);
+app.use("/api/v1/subscriptions", subscriptionRoutes);
+app.use("/api/v1/tweets", tweetRoutes);
 app.use("/api/v1/healthcheck", healthcheckRouter);
+app.use("/api/v1/dashboard", dashboardRouter);
 
-// ✅ Global error handler (very important for consistent JSON responses)
-app.use((err, req, res, next) => {
-  console.error("❌ Error:", err.message);
-
-  res.status(err.statusCode || 500).json({
-    success: false,
-    statusCode: err.statusCode || 500,
-    message: err.message || "Internal Server Error",
-    errors: err.errors || [],
-  });
-});
-
-export { app };
-
-// import cookieParser from "cookie-parser";
-// import express from "express";
-// import cors from "cors"
-
-// const app= express()
-// app.use(cors({
-//     origin:process.env.CORS_ORIGIN,
-//     credentials:true
-// }))
-// app.use(express.json({limit:"16kb"}))
-// app.use(express.urlencoded({extended:true}))
-// app.use(express.static("public"))
-// app.use(cookieParser())
-
-// import userRouter from './routes/users.js'
-// app.use("/users",userRouter)
-
-// export {app}
-   
+export default app;

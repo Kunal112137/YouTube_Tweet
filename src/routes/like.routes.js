@@ -1,22 +1,22 @@
 import { Router } from "express";
 import {
-    getLikedVideos,
-    toggleCommentLike,
-    toggleTweetLike,
-    toggleVideoLike,
-    getLikesByTweet,
-    
-    getLikesByVideo,
-    getLikesByComment
-} from "../controllers/like.controller.js"
-import { verifyJWT } from "../middlewares/auth.js";
-const router=Router();
-router.use(verifyJWT);
-router.route("/toggle/v/:videoId").post(toggleVideoLike);
-router.route("/toggle/c/:commentId").post(toggleCommentLike);
-router.route("/toggle/t/:tweetId").post(toggleTweetLike);
+  toggleCommentLike,
+  toggleTweetLike,
+  toggleVideoLike,
+  getLikesByVideo,
+  getLikesByComment,
+  getLikesByTweet,
+  getLikedVideos,
+} from "../controllers/like.controller.js";
+import { verifyToken } from "../middlewares/auth.middleware.js";
+
+const router = Router();
+router.post("/comment/:commentId", verifyToken, toggleCommentLike);
+router.post("/tweet/:tweetId", verifyToken, toggleTweetLike);
+router.post("/video/:videoId", verifyToken, toggleVideoLike);
+router.get("/video/:videoId", getLikesByVideo);
+router.get("/comment/:commentId", getLikesByComment);
+router.get("/tweet/:tweetId", getLikesByTweet);
 router.route("/videos").get(getLikedVideos);
-router.get("/videos/:commentId",getLikesByComment);
-router.get("/videos/:videoId",getLikesByVideo);
-router.get("/tweet/:tweetId",getLikesByTweet)
-export default router
+
+export default router;

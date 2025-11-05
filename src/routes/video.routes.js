@@ -1,44 +1,50 @@
 import { Router } from "express";
-import { upload } from "../middlewares/multer.js";
-import {verifyJWT} from "../middlewares/auth.js";
-import { uploadCloudinary } from "../utils/cloudinary.js";
 import {
-    getAllvideos,
-    deletevideo,
-     
-      publishAVideo,
-      getvideobyId,
-      updatevideo,
-      togglePublicStatus
-      ,incrementViews,
-      searchVideos,
-      getVideosByuser,
-      getRandomVideos,
-      getSubscribedVideos,
-      getTrendingVideos
-} from "../controllers/video.controller.js"
-const router=Router();
-router.use(verifyJWT);
+  createVideo,
+  incrementVideoViews,
+  getVideoById,
+  updateVideoById,
+  deleteVideoById,
+  getAllVideos,
+  searchVideos,
+  getVideosByUser,
+  toggleVideoPublish,
+  getRandomVideos,
+  getSubscribedVideos,
+  getTrendingVideos,
+} from "../controllers/video.controller.js";
+import { verifyToken } from "../middlewares/auth.middleware.js";
+import { upload } from "../middlewares/multer.middleware.js";
+
+const router = Router();
+
+router.use(verifyToken);
+
 router
-.route("/")
-.get(getAllvideos)
-.post(upload.fields([
-    { name:"videoFile", maxCount:1, },
-    { name: "thumbnail", maxCount: 1 }
-]),
-publishAVideo);
+  .route("/")
+  .post(
+    upload.fields([{ name: "videoFile" }, { name: "thumbnail" }]),
+    createVideo
+  )
+  .get(getAllVideos);
 router.route("/search").get(searchVideos);
-
-
-
-router.route("/toggle/publish/:videoId").patch(togglePublicStatus);
 router.route("/random").get(getRandomVideos);
 router.route("/trending").get(getTrendingVideos);
 router.route("/subscriptions").get(getSubscribedVideos);
-router.route("/user/:userId").get(getVideosByuser)
-router.route("/:videoId").get(getvideobyId)
-.delete(deletevideo).patch(upload.fields([{name:"videoFile"},{name:"thumbnail"}]),updatevideo);
+router.route("/user/:userId").get(getVideosByUser);
+router.route("/togglePublish/:videoId").patch(toggleVideoPublish);
+router
+  .route("/:videoId")
+  .get(incrementVideoViews, getVideoById)
+  .patch(
+    upload.fields([{ name: "videoFile" }, { name: "thumbnail"}]),
+    updateVideoById
+  )
+  .delete(deleteVideoById);
 
-// 🔵 Get, update, or delete a specific video
+router.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ message: err.message });
+});
 
-  export default router
+export default router;

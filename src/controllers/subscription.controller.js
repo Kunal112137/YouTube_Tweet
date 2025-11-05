@@ -1,87 +1,88 @@
-
-import mongoose,{isValidObjectId} from "mongoose";
-import { SubScription } from "../models/subscription.js";
-import { ApiErrors } from "../utils/apiErrors.js";
-import { ApiResponse } from "../utils/ApiResponse.js";
+import ApiResponse from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import { User } from "../models/user.model.js";
+import { ApiError } from "../utils/ApiError.js";
+import mongoose from "mongoose";
+import Subscription from "../models/subscription.model.js";
 
-/* ==============================================
-   🔁 TOGGLE SUBSCRIPTION (Subscribe / Unsubscribe)
-============================================== */
-const toggleSubscription = asyncHandler(async (req, res) => {
-  const { channelId, userId } = req.params;
-  const subscriberId=req.user._id;
+// Subscribe to a channel
+const subscribe = asyncHandler(async (req, res) => {
+  const { channelId } = req.params;
+  const subscriberId = req.user._id;
 
+  if (!mongoose.Types.ObjectId.isValid(channelId)) {
+    throw new ApiError(400, "Invalid channel ID");
+  }
 
-  if (!mongoose.Types.ObjectId.isValid(channelId)) throw new ApiErrors(400, "Invalid channel ID");
-  if (!userId) throw new ApiErrors(400, "Invalid user ID");
-const existingSubscription=await SubScription.findOne({
-  subscriber:subscriberId,
-  channel:channelId
-
-})
-if(existingSubscription){ const unsubscribed=await SubScription.findByIdAndDelete(existingSubscription._id);
-  if(!unsubscribed)throw new ApiErrors(501,"failed to delete the object");
-  // throw new ApiError(501,"failed to unsubscribe the channel");
-
-return res.status(200).json(new ApiResponse(200,unsubscribed,"unsubscribed successfully"))
-}
-  const subscription=new SubScription({
-    subscriber:subscriberId,
-    channel:channelId
-  });
-
-
-  await SubScription.create({
-    subscriber: userId,
+  const existingSubscription = await Subscription.findOne({
+    subscriber: subscriberId,
     channel: channelId,
   });
-  await subscription.save();
-  new ApiResponse(201,"subscribed successfully",{
-    subscription,
-    length:subscription.length
-  })
 
+  if (existingSubscription) {
+    throw new ApiError(400, "Already subscribed to this channel");
+  }
+
+  const subscription = await Subscription.create({
+    subscriber: subscriberId,
+    channel: channelId
+  });
+
+  return res
+    .status(201)
+    .json(
+      new ApiResponse(
+        201,
+        { subscription },
+        "Subscribed successfully ✅"
+      )
+    );
 });
 
-/* ==============================================
-   👥 GET CHANNEL SUBSCRIBER COUNT
-============================================== */
-const getUserChannelSubscribers = asyncHandler(async (req, res) => {
-  const { subscriberId } = req.params;
 
-  if (!mongoose.Types.ObjectId.isValid(subscriberId)) throw new ApiErrors(400, "invalid channel ID ");
-const subscribers=await SubScription.find({channel:subscriberId}).populate("subscriber",":username email avatar")
-  const channel = await User.findById(channelId);
-  if (!channel) throw new ApiErrors(404, "Channel does not exist");
-  return res.status(200).json(
-    new ApiResponse(
-      200,
-     subscribers,
-      "Subscriber count fetched successfully"
-    )
+// Unsubscribe from a channel
+const unsubscribe = asyncHandler(async (req, res) => {
+  const { channelId } = req.params;
+  const subscriberId = req.user._id;
+  if (!mongoose.Types.ObjectId.isValid(channelId)) {
+    throw new ApiError(400, "Invalid channel ID");
+  }
+  const subscription = await Subscription.findOneAndDelete({
+    subscriber: subscriberId,
+    channel: channelId,
+  });
+  if (!subscription) {
+    throw new ApiError(404, "Subscription not found");
+  }
+  res.status(200).json(new ApiResponse(200, "Unsubscribed successfully"));
+});
+// Get all subscriptions for a user
+const getSubscriptions = asyncHandler(async (req, res) => {
+  const subscriberId = req.user._id;
+  const subscriptions = await Subscription.find({
+    subscriber: subscriberId,
+  }).populate("channel", "username email avatar");
+  res
+    .status(200)
+    .json(
+      new ApiResponse(200, "Subscriptions fetched successfully", subscriptions)
+    );
+});
+
+// Get all subscribers for a channel
+const getSubscribers = asyncHandler(async (req, res) => {
+  const { channelId } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(channelId)) {
+    throw new ApiError(400, "Invalid channel ID");
+  }
+  const subscribers = await Subscription.find({ channel: channelId }).populate(
+    "subscriber",
+    "username email avatar"
   );
+  res
+    .status(200)
+    .json(
+      new ApiResponse(200, "Subscribers fetched successfully", subscribers)
+    );
 });
 
-/* ==============================================
-   📺 GET ALL CHANNELS A USER IS SUBSCRIBED TO
-============================================== */
-const getSubscribedChannels = asyncHandler(async (req, res) => {
-  const  subscriberId  = req.user._id;
-  const subscriptions=await SubScription.find({subscriber:subscriberId})
-  .populate("channel", "username email avatar")
- res.status(200).json(
-    new ApiResponse(
-      200,
-      subscriptions,
-      "Subscribed channels fetched successfully"
-    )
-  );
-});
-
-export {
-  toggleSubscription,
-  getUserChannelSubscribers,
-  getSubscribedChannels,
-};
+export { subscribe, unsubscribe, getSubscriptions, getSubscribers };

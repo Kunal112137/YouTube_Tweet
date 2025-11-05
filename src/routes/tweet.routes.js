@@ -1,35 +1,21 @@
 import { Router } from "express";
 import {
   createTweet,
-  updateTweet,
-  getUserTweets,
-  deleteTweet,
   getTweets,
-  getTweetsById,
+  getTweetById,
+  updateTweet,
+  deleteTweet,
+  getUserTweets
 } from "../controllers/tweet.controller.js";
-import { verifyJWT } from "../middlewares/auth.js";
+import { verifyToken } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
-// ✅ Protect all routes using JWT middleware
-router.use(verifyJWT);
-
-// ✅ CREATE a new tweet
-router.post("/", createTweet);
-
-// ✅ GET all tweets (with pagination)
+router.post("/", verifyToken, createTweet);
 router.get("/", getTweets);
-
-// ✅ GET tweets by userId
-router.get("/user/:userId", getUserTweets);
-
-// ✅ GET tweet by tweetId
-router.get("/:tweetId", getTweetsById);
-
-// ✅ UPDATE tweet
-router.patch("/:tweetId", updateTweet);
-
-// ✅ DELETE tweet
-router.delete("/:tweetId", deleteTweet);
+router.get("/:id", getTweetById);
+router.put("/:tweetId", verifyToken, updateTweet);
+router.delete("/:tweetId", verifyToken, deleteTweet);
+router.get("/user/:userId", verifyToken, getUserTweets);
 
 export default router;
