@@ -1,10 +1,4 @@
-YouTube Tweet – Smart Task Planner (Full-Stack MERN)
-
-This project is a Smart Task Planner + Social Feed platform inspired by YouTube UI + Twitter tweeting features.
-It allows users to create accounts, post tweets, manage tasks, track progress, and interact with content — all in a clean MERN-stack application.
-
-
-Features
+🚀 Features
 ✅ Task Planner
 
 Create, edit, delete tasks
@@ -41,9 +35,7 @@ Protected routes
 
 Role-based access (optional extension)
 
-
-
-Tech Stack
+🧰 Tech Stack
 Frontend
 
 React
@@ -64,12 +56,13 @@ MongoDB + Mongoose
 
 JWT authentication
 
+📂 Project Structure
 YouTube_Tweet/
 │── backend/       # Node.js + Express + MongoDB
 │── frontend/      # React + Tailwind + RTK Query
 │── README.md
 
-Installation & Setup
+⚙️ Installation & Setup
 1. Clone Repository
 git clone https://github.com/Kunal112137/YouTube_Tweet.git
 cd YouTube_Tweet
@@ -84,25 +77,39 @@ cd frontend
 npm install
 npm run dev
 
-
-
-API Endpoints (Important for Assignment)
+📌 API Endpoints (Important for Assignment)
 User Routes
 
 POST /auth/register
+
 POST /auth/login
+
 GET /user/:userId
 
 Tweet Routes
+
 POST /tweets
+
 GET /tweets/user/:userId
+
 PUT /tweets/like/:tweetId
+
 Task Routes
 
 POST /tasks
+
 GET /tasks
+
 PUT /tasks/:taskId
-Developer
+
+🎯 What Problem Does This Project Solve?
+
+✔ Helps users plan tasks efficiently
+✔ Provides a social experience like Twitter
+✔ Uses modular & production-ready code, suitable for real-world development
+✔ Demonstrates full-stack capability for internship selection
+
+👨‍💻 Developer
 
 Kunal Chavhan
 MERN Stack Developer | Final Year Student
