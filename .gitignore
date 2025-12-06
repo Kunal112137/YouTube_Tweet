@@ -1,6 +1,3 @@
-# generally rather than writing whole .gitignore code you can generate it from : https://mrkandreev.name/snippets/gitignore-generator/#Node
-# search node in serach bar
-
 # Logs
 logs
 *.log
@@ -121,3 +118,4 @@ dist
 .pnp.*
 
 # End of https://mrkandreev.name/snippets/gitignore-generator/#Node
+.DS_Store

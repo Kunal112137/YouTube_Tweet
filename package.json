@@ -1,33 +1,25 @@
 {
-  "name": "backend",
+  "name": "YourTube",
   "version": "1.0.0",
-  "description": "This is my backend",
-  "keywords": [
-    "backend"
-  ],
-  "author": "",
-  "license": "ISC",
-
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "dev": "nodemon src/index.js",
-    "start": "node src/index.js"
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd backend && npm run dev",
+    "client": "cd frontend && npm run dev"
   },
-
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Yash2204V/Axoryn.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "YourTube",
+  "bugs": {
+    "url": "https://github.com/Yash2204V/Axoryn/issues"
+  },
+  "homepage": "https://github.com/Yash2204V/Axoryn#readme",
   "dependencies": {
-    "axios": "^1.11.0",
-    "bcrypt": "^6.0.0",
-    "cloudinary": "^2.7.0",
-    "cookie-parser": "^1.4.7",
-    "cors": "^2.8.5",
-    "dotenv": "^17.2.1",
-    "express": "^5.1.0",
-    "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.18.0",
-    "mongoose-aggregate-paginate-v2": "^1.1.4",
-    "multer": "^2.0.2"
-  },
-
-  "devDependencies": {
-    "nodemon": "^3.1.10"
+    "concurrently": "^9.2.0"
   }
 }

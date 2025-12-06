@@ -1,0 +1,147 @@
+import { useState } from "react";
+import {Button,Input, Logo} from "../../components";
+import {useNavigate, Link} from "react-router-dom";
+import {useLoginUserMutation} from "../../services/user/userApi";
+import toast from "react-hot-toast";
+function Login(){
+    const [loginUser,{isLoading,error}]=useLoginUserMutation();
+    const navigate=useNavigate();
+    const [formData,setFormData]=useState({
+        userName:"",
+        email:"",
+        password:""
+    });
+    const handleChange=(e)=>{
+        const {name,value}=e.target;
+        setFormData(prev=>({
+            ...prev,
+            // Because React state should always be updated immutably.
+            [name]:value
+        }));
+    };
+    const handleSubmit=async(e)=>{
+        
+        e.preventDefault(); // Prevent form default submission
+        //basic validation atleast username/email and password required
+        if(!formData.password || !formData.userName && !formData.email){
+            return; //let browser handle required field         
+                  }
+                  try{
+                    const response=await loginUser(formData).unwrap();
+                    if(response?.data?.accessToken){
+                        localStorage.setItem('token', response.data.accessToken)
+                    }
+                    setFormData({
+                        userName:"",
+                        email:"",
+                        password:""
+                    });
+                    toast.success("Login successfull !");
+                    navigate('/');
+                  }catch(err){
+                    toast.error('login failed');
+                    console.error("login error ",err)
+                  }
+    };
+    const handleDemoLogin=async()=>{
+        const demoData={
+            userName:`demo`,
+            email:'demo@gmail.com',
+            password:`123456`,
+        };
+        try{
+            const response=await loginUser(demoData).unwrap();
+            if(response?.data?.accessToken){
+                localStorage.setItem('token',response.data.accessToken);
+            }
+            setFormData({
+                userName:"",
+                email:"",
+                password:""
+            });
+            toast.success("Demo login failed");
+            navigate('/');
+
+        }
+        catch(err){
+            toast.error(`Demo login failed`);
+            console.error('demo login error:',err)
+        }
+    };
+   return (
+        <div className="h-screen overflow-y-auto bg-[#121212] text-white">
+            <div className="mx-auto my-8 flex w-full max-w-sm flex-col px-4">
+                <Logo width={20} />
+                <hr className="mb-6 border-transparent" />
+                {error && (
+                    <div className="mb-4 p-3 bg-red-600 text-white rounded-lg text-sm">
+                        {error?.data?.message || error?.message || 'Login failed'}
+                    </div>
+                )}
+                {/* )} */}
+
+                <form className="flex flex-col" onSubmit={handleSubmit}>
+                    <Input
+                        label={'Username'}
+                        type={'text'}
+                        name={'username'}
+                        onChange={handleChange}
+                        value={formData.userName}
+                        placeholder={'Enter your username'}
+                    />
+                    <Input
+                        label={'Email'}
+                        type={'email'}
+                        name={'email'}
+                        onChange={handleChange}
+                        value={formData.email}
+                        placeholder={'Enter your email'}
+                    />
+                    <Input
+                        label={'Password*'}
+                        type={'password'}
+                        name={'password'}
+                        onChange={handleChange}
+                        value={formData.password}
+                        placeholder={'Enter your password'}
+                        required
+                    />
+                    <div className='mb-3'>
+                        <input
+                            type="checkbox"
+                            required
+                            className="mr-2 h-4 w-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                        />
+                        <Link to={'/term-and-condition'} className='underline'>Terms & Conditions</Link>
+                    </div>
+                    <Button
+                        type={'submit'}
+                        disabled={isLoading}>
+                        {isLoading ? 'Signing In...' : 'Sign In'}
+                    </Button>
+
+                    <Button
+                        type={'button'}
+                        disabled={isLoading}
+                        onClick={handleDemoLogin}
+                        className="mt-3 bg-gray-800 hover:bg-gray-700 text-gray-200"
+                    >
+                        {isLoading ? 'Signing In...' : 'Login as Demo'}
+                    </Button>
+                </form>
+
+                <div className="mt-6 text-center text-sm text-gray-400">
+                    Don't have an account?{' '}
+                    <Link
+                        to="/register"
+                        className="text-[#08e6f5] hover:underline font-semibold"
+                    >
+                        Sign Up
+                    </Link>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+export default Login
