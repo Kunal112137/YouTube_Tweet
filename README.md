@@ -1,13 +1,12 @@
-YouTube Tweet – Smart Task Planner (Full-Stack MERN)
+YouTube Tweet – (Full-Stack MERN)
 
-This project is a Smart Task Planner + Social Feed platform inspired by YouTube UI + Twitter tweeting features.
+This project is a  Social Feed platform inspired by YouTube UI + Twitter tweeting features.
 It allows users to create accounts, post tweets, manage tasks, track progress, and interact with content — all in a clean MERN-stack application.
 
 
 🚀 Features
-✅ Task Planner
 
-Create, edit, delete tasks
+Create, edit, delete 
 
 Progress tracking
 
