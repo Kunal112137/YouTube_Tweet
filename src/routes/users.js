@@ -1,5 +1,4 @@
 import { Router } from "express";
-// import { AccountDetail, ChangePassword, getCurrentUser, getUserProfile, getWatchHistory, loginUser, logoutUser, refreshAccessToken, registerUser, UpdateAvatar, UpdatecoverImage } from "../controllers/user.controller.js"; // ← must match actual file name
 import { upload } from "../middlewares/multer.js";
 import {verifyJWT} from "../middlewares/auth.js";
 
@@ -19,7 +18,7 @@ import {
 
 const router = Router();
 
-// 📝 POST /api/v1/users/register
+// / /api/v1/users/register
 router.route("/register").post(
   upload.fields([
     { name: "avatar", maxCount: 1 },
