@@ -1,7 +1,7 @@
 YouTube Tweet – (Full-Stack MERN)
 
 This project is a  Social Feed platform inspired by YouTube UI + Twitter tweeting features.
-It allows users to create accounts, post tweets, manage tasks, track progress, and interact with content — all in a clean MERN-stack application.
+It allows users to create accounts, post tweets, create playlist and interact with content — all in a clean MERN-stack application.
 
 
 🚀 Features
