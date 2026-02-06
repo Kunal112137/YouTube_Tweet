@@ -1,6 +1,6 @@
 YouTube Tweet – (Full-Stack MERN)
 
-https://vercel.com/kunals-projects-9657dd3a/you-tube-tweet
+live project: https://vercel.com/kunals-projects-9657dd3a/you-tube-tweet
 
 
 This project is a  Social Feed platform inspired by YouTube UI + Twitter tweeting features.
