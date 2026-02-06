@@ -4,7 +4,7 @@ import { ApiError } from "../utils/ApiError.js";
 import mongoose from "mongoose";
 import { Video } from "../models/video.model.js";
 import Subscription from "../models/subscription.model.js";
-import { UploadFile, DeleteFile } from "../utils/Cloudinary.js";
+import { UploadFile, DeleteFile } from "../utils/cloudinary.js";
 
 export const createVideo = asyncHandler(async (req, res) => {
   const title = req.body?.title;
