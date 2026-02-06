@@ -12,7 +12,7 @@ import RelaodBtn from "./ReloadBtn";
 import CommentsCard from "./CommentsCard"
 import PlaylistCard from "./Playlist/PlaylistCard";
 import SavePlaylistCard from "./Playlist/SavePlaylist";
-import Personal from "./CustomizeProfile/personal";
+import Personal from "./CustomizeProfile/Personal";
 import Password from "./CustomizeProfile/Password"
 
 export {
